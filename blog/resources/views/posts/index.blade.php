@@ -1,21 +1,38 @@
 @extends('layouts.app')
 
+@section('title', 'Campus Blog')
+
+@section('sidebar')
+  <div class="card">
+    <h3>Create Post</h3>
+    <form action="{{ route('posts.store') }}" method="POST">
+      @csrf
+      <input type="text" name="title" placeholder="Post title" required>
+      <textarea name="content" rows="4" placeholder="Write something..." required></textarea>
+      <button type="submit">Post</button>
+    </form>
+  </div>
+@endsection
+
 @section('content')
-<h1>Blog Posts</h1>
+  <div class="search-box">
+    <form action="{{ route('posts.index') }}" method="GET">
+      <input type="text" name="search" value="{{ request('search') }}" placeholder="Search posts by title...">
+    </form>
+  </div>
 
-<form method="GET" action="{{ route('posts.index') }}">
-    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Search by username">
-    <button type="submit">Search</button>
-</form>
-
-<p><a href="{{ route('posts.create') }}">➕ Create New Post</a></p>
-
-@foreach ($posts as $post)
-    <div style="border:1px solid #ddd; margin:10px 0; padding:10px;">
-        <h3>
-            <a href="{{ route('posts.show', $post) }}">{{ $post->title }}</a>
-        </h3>
-        <p><em>By: {{ $post->user->name ?? 'Anonymous' }}</em></p>
-    </div>
-@endforeach
+  <div id="feed">
+    @forelse($posts as $post)
+      <div class="post">
+        <h3>{{ $post->title }}</h3>
+        <p>{{ Str::limit($post->content, 150) }}</p>
+        <a href="{{ route('posts.show', $post->id) }}" class="btn-small">Read More</a>
+      </div>
+    @empty
+      <div class="post">
+        <h3>No posts yet</h3>
+        <p>Be the first to create a post!</p>
+      </div>
+    @endforelse
+  </div>
 @endsection

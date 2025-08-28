@@ -6,20 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->text('content');
+            // foreign key to posts
+            $table->unsignedBigInteger('post_id');
+            $table->unsignedBigInteger('user_id')->nullable(); // nullable for now
             $table->timestamps();
+
+            // relationship to posts
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('comments');

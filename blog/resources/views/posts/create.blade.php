@@ -1,18 +1,22 @@
 @extends('layouts.app')
 
+@section('title', 'Create Post')
+
+@section('sidebar')
+  <div class="card">
+    <h3>Navigation</h3>
+    <a href="{{ route('posts.index') }}" class="btn-small">← Back to Posts</a>
+  </div>
+@endsection
+
 @section('content')
-<h1>Create Post</h1>
-
-<form action="{{ route('posts.store') }}" method="POST">
-    @csrf
-    <p>
-        <input type="text" name="title" placeholder="Title" style="width:100%;" required>
-    </p>
-    <p>
-        <textarea name="content" placeholder="Write your post..." rows="6" style="width:100%;" required></textarea>
-    </p>
-    <button type="submit">Publish</button>
-</form>
-
-<p><a href="{{ route('posts.index') }}">⬅ Back to Posts</a></p>
+  <div class="card">
+    <h3>Create a New Post</h3>
+    <form action="{{ route('posts.store') }}" method="POST">
+      @csrf
+      <input type="text" name="title" placeholder="Post title" required>
+      <textarea name="content" rows="5" placeholder="Write something..." required></textarea>
+      <button type="submit">Publish</button>
+    </form>
+  </div>
 @endsection

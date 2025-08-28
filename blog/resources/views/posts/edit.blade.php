@@ -1,18 +1,23 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Post')
+
+@section('sidebar')
+  <div class="card">
+    <h3>Navigation</h3>
+    <a href="{{ route('posts.index') }}" class="btn-small">← Back to Posts</a>
+  </div>
+@endsection
+
 @section('content')
-<h1>Edit Post</h1>
-
-<form action="{{ route('posts.update', $post) }}" method="POST">
-    @csrf @method('PUT')
-    <p>
-        <input type="text" name="title" value="{{ $post->title }}" style="width:100%;" required>
-    </p>
-    <p>
-        <textarea name="content" rows="6" style="width:100%;" required>{{ $post->content }}</textarea>
-    </p>
-    <button type="submit">Update</button>
-</form>
-
-<p><a href="{{ route('posts.show', $post) }}">⬅ Back to Post</a></p>
+  <div class="card">
+    <h3>Edit Post</h3>
+    <form action="{{ route('posts.update', $post->id) }}" method="POST">
+      @csrf
+      @method('PUT')
+      <input type="text" name="title" value="{{ old('title', $post->title) }}" required>
+      <textarea name="content" rows="5" required>{{ old('content', $post->content) }}</textarea>
+      <button type="submit">Update</button>
+    </form>
+  </div>
 @endsection

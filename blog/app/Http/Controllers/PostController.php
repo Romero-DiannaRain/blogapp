@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -12,11 +11,8 @@ class PostController extends Controller
     {
         $search = $request->query('search');
 
-        $posts = Post::with('user')
-            ->when($search, function($query, $search) {
-                $query->whereHas('user', function($q) use ($search) {
-                    $q->where('name', 'like', "%$search%");
-                });
+        $posts = Post::when($search, function($query, $search) {
+                $query->where('title', 'like', "%$search%");
             })
             ->latest()
             ->get();
@@ -32,14 +28,14 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title'   => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
         Post::create([
-            'title' => $request->title,
+            'title'   => $request->title,
             'content' => $request->content,
-            'user_id' => Auth::id(),
+            'user_id' => null, // since no login system yet
         ]);
 
         return redirect()->route('posts.index')->with('success', 'Post created!');
@@ -52,21 +48,13 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        if ($post->user_id !== Auth::id()) {
-            abort(403);
-        }
-
         return view('posts.edit', compact('post'));
     }
 
     public function update(Request $request, Post $post)
     {
-        if ($post->user_id !== Auth::id()) {
-            abort(403);
-        }
-
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title'   => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
@@ -77,10 +65,6 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        if ($post->user_id !== Auth::id()) {
-            abort(403);
-        }
-
         $post->delete();
         return redirect()->route('posts.index')->with('success', 'Post deleted!');
     }
