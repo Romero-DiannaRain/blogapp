@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\StudentAuthController;
 
 // Homepage
 Route::get('/', function () {
@@ -10,33 +11,27 @@ Route::get('/', function () {
 });
 
 // =========================
-// Post Routes
+// Public Routes (No Auth Required)
 // =========================
-
-// Show all posts
-Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-
-// Show form to create a post
-Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
-
-// Store a new post
-Route::post('/posts/add', [PostController::class, 'store'])->name('posts.store');
-
-// Show a single post
-Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-
-// Show edit form
-Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
-
-// Update a post
-Route::put('/posts/{post}/update', [PostController::class, 'update'])->name('posts.update');
-
-// Delete a post
-Route::delete('/posts/{post}/delete', [PostController::class, 'destroy'])->name('posts.destroy');
+Route::get('/student-login', [StudentAuthController::class, 'showLoginForm'])->name('student.login.form');
+Route::post('/student-login', [StudentAuthController::class, 'login'])->name('student.login.submit');
+Route::get('/student-logout', [StudentAuthController::class, 'logout'])->name('student.logout');
 
 // =========================
-// Comment Routes
+// Protected Routes (Students Only)
 // =========================
+Route::middleware(['student.auth'])->group(function () {
+    // Posts
+    Route::prefix('posts')->name('posts.')->group(function () {
+        Route::get('/', [PostController::class, 'index'])->name('index');        
+        Route::get('/create', [PostController::class, 'create'])->name('create'); 
+        Route::post('/', [PostController::class, 'store'])->name('store');        
+        Route::get('/{post}', [PostController::class, 'show'])->name('show');     
+        Route::get('/{post}/edit', [PostController::class, 'edit'])->name('edit');
+        Route::put('/{post}', [PostController::class, 'update'])->name('update'); 
+        Route::delete('/{post}', [PostController::class, 'destroy'])->name('destroy'); 
 
-// Add a comment to a post
-Route::post('/posts/{post}/comments/add', [CommentController::class, 'store'])->name('comments.store');
+        // Comments
+        Route::post('/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    });
+});

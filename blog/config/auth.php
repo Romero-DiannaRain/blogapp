@@ -36,11 +36,18 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
     ],
+
+    // Add this guard for students
+    'student' => [
+        'driver' => 'session',
+        'provider' => 'students',
+    ],
+],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -60,16 +67,18 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
     ],
+
+    // Add this for students
+    'students' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Student::class, // optional if you have a Student model
+    ],
+],
+
 
     /*
     |--------------------------------------------------------------------------
