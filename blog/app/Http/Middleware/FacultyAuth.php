@@ -5,16 +5,17 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class StudentAuth
+class FacultyAuth
 {
     public function handle(Request $request, Closure $next)
     {
-        // Check if student is logged in (keys set in StudentAuthController)
-        if (!$request->session()->has('student_id')) {
-            return redirect()->route('student.login.form')
+        if (!$request->session()->has('faculty_id')) {
+            return redirect()->route('faculty.login.form')
                 ->with('error', 'You must be logged in to access this page.');
         }
 
         return $next($request);
     }
 }
+
+

@@ -13,7 +13,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('content');
             // allow user_id to be NULL since no login yet
-            $table->unsignedBigInteger('user_id')->nullable(); 
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

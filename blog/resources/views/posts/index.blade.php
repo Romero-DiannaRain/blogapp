@@ -5,10 +5,11 @@
 @section('sidebar')
   <div class="card">
     <h3>Create Post</h3>
-    <form action="{{ route('posts.store') }}" method="POST">
+    <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <input type="text" name="title" placeholder="Post title" required>
       <textarea name="content" rows="4" placeholder="Write something..." required></textarea>
+      <input type="file" name="image" accept="image/*">
       <button type="submit">Post</button>
     </form>
   </div>
@@ -25,6 +26,14 @@
     @forelse($posts as $post)
       <div class="post">
         <h3>{{ $post->title }}</h3>
+        @if($post->author_name)
+          <p style="margin:4px 0; color:#666; font-size: 13px;">By {{ $post->author_name }} @if($post->author_role) ({{ ucfirst($post->author_role) }}) @endif</p>
+        @endif
+        @if($post->image)
+          <div>
+            <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" style="max-width: 200px;">
+          </div>
+        @endif
         <p>{{ Str::limit($post->content, 150) }}</p>
         <a href="{{ route('posts.show', $post->id) }}" class="btn-small">Read More</a>
       </div>

@@ -39,8 +39,8 @@
     .card h3 {
       margin-top: 0;
     }
-    .card input, 
-    .card textarea, 
+    .card input,
+    .card textarea,
     .card button {
       width: 100%;
       margin: 8px 0;
@@ -99,7 +99,20 @@
 <body>
 
 <header>
-  <h1>Campus Blog</h1>
+  <div style="display:flex; align-items:center; justify-content:center; position: relative;">
+    <h1 style="margin:0;">Campus Blog</h1>
+    <div style="position:absolute; right: 15px; top: 50%; transform: translateY(-50%); display:flex; gap:8px; align-items:center;">
+      @if(session()->has('student_id'))
+        <span style="font-size:12px; opacity:0.9; margin-right:6px;">{{ session('student_name') }}</span>
+        <a href="{{ route('student.logout') }}" class="btn-small" style="padding:6px 10px;">Logout</a>
+      @elseif(session()->has('faculty_id'))
+        <span style="font-size:12px; opacity:0.9; margin-right:6px;">{{ session('faculty_name') }}</span>
+        <a href="{{ route('faculty.logout') }}" class="btn-small" style="padding:6px 10px;">Logout</a>
+      @else
+        <a href="{{ route('student.login.form') }}" class="btn-small" style="padding:6px 10px;">Login</a>
+      @endif
+    </div>
+  </div>
 </header>
 
 <div class="container">

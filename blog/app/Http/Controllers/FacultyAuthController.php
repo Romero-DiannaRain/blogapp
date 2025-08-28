@@ -6,14 +6,14 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 
-class StudentAuthController extends Controller
+class FacultyAuthController extends Controller
 {
     private $baseURL = "https://pupt-registration.site";
     private $API_KEY = "pup_sjXDT8odELYV71pVfirvFRziLgs5G6y1_1755770032";
 
     public function showLoginForm()
     {
-        return view('auth.student-login'); // your Blade file
+        return view('auth.faculty-login');
     }
 
     public function login(Request $request)
@@ -43,36 +43,37 @@ class StudentAuthController extends Controller
                 $data = $body['data'];
                 $user = $data['user'];
 
-                // Save student details in session
+                // Save faculty details in session
                 session([
-                    'student_id'    => $user['id'] ?? null,
-                    'student_email' => $user['email'] ?? null,
-                    'student_name'  => ($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? ''),
-                    'api_token'     => $data['session_token'] ?? null,
+                    'faculty_id'    => $user['id'] ?? null,
+                    'faculty_email' => $user['email'] ?? null,
+                    'faculty_name'  => ($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? ''),
+                    'faculty_token' => $data['session_token'] ?? null,
                 ]);
 
                 return redirect()->route('posts.index')
-                                 ->with('success', 'Welcome Student!');
+                                 ->with('success', 'Welcome Faculty!');
             }
 
-            return redirect()->route('student.login.form')->withErrors([
+            return redirect()->route('faculty.login.form')->withErrors([
                 'login' => 'Login failed. Please check your credentials.',
             ]);
 
         } catch (ClientException $e) {
-            return redirect()->route('student.login.form')->withErrors([
+            return redirect()->route('faculty.login.form')->withErrors([
                 'login' => 'Login failed. Please check your credentials.',
             ]);
         }
     }
 
-        public function logout(Request $request)
+    public function logout(Request $request)
     {
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Redirect to homepage instead of login form
-        return redirect('/')->with('success', 'You have been logged out.');
+        return redirect('/')
+            ->with('success', 'You have been logged out.');
     }
-
 }
+
+

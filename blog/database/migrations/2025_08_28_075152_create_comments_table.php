@@ -14,6 +14,7 @@ return new class extends Migration
             // foreign key to posts
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id')->nullable(); // nullable for now
+            $table->string('author_name')->nullable(); // add this line
             $table->timestamps();
 
             // relationship to posts
