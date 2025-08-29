@@ -24,6 +24,16 @@
     }
     .login-container button:hover { background-color:rgb(59,82,176); }
     .error-msg { color: red; text-align:center; margin-bottom:15px; }
+
+    .back-btn {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #000;
+      text-decoration: underline;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -56,10 +66,16 @@
         </div>
 
         <button type="submit">Login</button>
+
+        <span class="back-btn" onclick="goBack()">Back</span>
       </form>
     </div>
   </div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
 </body>
 </html>
-
-
